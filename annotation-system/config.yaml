@@ -1,0 +1,30 @@
+app:
+  name: "PITCH Annotation System"
+  max_group_participants: 5
+
+jwt:
+  secret_key: "${JWT_SECRET_KEY}"
+  algorithm: "HS256"
+  expiration_days: 7
+
+database:
+  url: "${DATABASE_URL}"
+
+llm:
+  provider: "${LLM_PROVIDER}"
+  bedrock:
+    profile: "${AWS_PROFILE}"
+    region: "${AWS_REGION}"
+    model_id: "${BEDROCK_MODEL_ID}"
+  openai:
+    model: "gpt-4o"
+
+search:
+  tavily_api_key: "${TAVILY_API_KEY}"
+  semantic_scholar_api_key: "${SEMANTIC_SCHOLAR_API_KEY}"
+
+cors:
+  allow_origin_regex: "https?://(localhost|127\\.0\\.0\\.1)(:\\d+)?"
+  allow_credentials: true
+  allow_methods: ["*"]
+  allow_headers: ["*"]

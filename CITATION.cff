@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+message: "If you use this benchmark in your research, please cite it as below."
+title: "PITCH: Proactive Intervention Timing for CHat"
+abstract: "A benchmark for evaluating AI systems' ability to identify optimal timing for proactive knowledge surfacing in group conversations."
+type: dataset
+authors:
+  - family-names: "Wang"
+    given-names: "Ruotong"
+  - family-names: "Yu"
+    given-names: "Brian S."
+  - family-names: "Zhou"
+    given-names: "Xinyi"
+  - family-names: "Chang"
+    given-names: "Joseph Chee"
+  - family-names: "Siangliulue"
+    given-names: "Pao"
+  - family-names: "Bragg"
+    given-names: "Jonathan"
+  - family-names: "Jiang"
+    given-names: "Liwei"
+  - family-names: "Zhang"
+    given-names: "Amy X."
+date-released: 2026-10-18
+url: "https://github.com/your-org/pitch-benchmark"
+repository-code: "https://github.com/your-org/pitch-benchmark"
+keywords:
+  - human-AI interaction
+  - conversation analysis
+  - proactive AI
+  - timing
+  - benchmark
+  - multi-party chat
+license: MIT
+preferred-citation:
+  type: article
+  title: "When Should AI Chime In? Benchmarking Timely Contribution of Proactive Agents in Multi-Party Chat"
+  authors:
+    - family-names: "Wang"
+      given-names: "Ruotong"
+    - family-names: "Yu"
+      given-names: "Brian S."
+    - family-names: "Zhou"
+      given-names: "Xinyi"
+    - family-names: "Chang"
+      given-names: "Joseph Chee"
+    - family-names: "Siangliulue"
+      given-names: "Pao"
+    - family-names: "Bragg"
+      given-names: "Jonathan"
+    - family-names: "Jiang"
+      given-names: "Liwei"
+    - family-names: "Zhang"
+      given-names: "Amy X."
+  journal: "arXiv preprint"
+  year: 2026

@@ -1,0 +1,183 @@
+# ============================================================================
+# PITCH Benchmark - Git Ignore
+# Covers: annotation-system (full-stack), proactive_prediction_algo, data/analysis
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Environment & Secrets
+# ----------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+
+# ----------------------------------------------------------------------------
+# Python (Backend + Prediction Algo)
+# ----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+*.egg
+wheels/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# ----------------------------------------------------------------------------
+# Node / React Frontend
+# ----------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ----------------------------------------------------------------------------
+# Jupyter Notebooks
+# ----------------------------------------------------------------------------
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# ----------------------------------------------------------------------------
+# Database
+# ----------------------------------------------------------------------------
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.sql.gz
+
+# Postgres data directories
+pgdata/
+postgres-data/
+
+# ----------------------------------------------------------------------------
+# IDE & Editors
+# ----------------------------------------------------------------------------
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+*.swp
+*.swo
+*.swn
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ----------------------------------------------------------------------------
+# OS Files
+# ----------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+
+# Linux
+.directory
+.Trash-*
+
+# ----------------------------------------------------------------------------
+# Logs
+# ----------------------------------------------------------------------------
+*.log
+logs/
+
+# ----------------------------------------------------------------------------
+# Docker
+# ----------------------------------------------------------------------------
+docker-compose.override.yml
+
+# ----------------------------------------------------------------------------
+# Claude Code
+# ----------------------------------------------------------------------------
+.claude/
+.claude-sandbox/
+.claude-sandbox.json
+
+# ----------------------------------------------------------------------------
+# Temporary Files
+# ----------------------------------------------------------------------------
+tmp/
+temp/
+*.tmp
+*.bak
+
+# ----------------------------------------------------------------------------
+# Data Files (Research Data)
+# ----------------------------------------------------------------------------
+# Currently TRACKING data files for reproducibility
+# Uncomment these lines if you want to exclude large data files:
+# data/*.csv
+# data/*.db
+# data/analysis/goal3_benchmark/results/*.json

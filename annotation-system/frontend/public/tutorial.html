@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Chat Study — Participant Tutorial</title>
+  <style>
+    :root {
+      --color-text-primary: #1a1a2e;
+      --color-text-secondary: #4a4a6a;
+      --color-text-tertiary: #7a7a9a;
+      --color-background: #fafafa;
+      --color-background-secondary: #f0f0f5;
+      --color-border: #e2e2ea;
+      --color-border-secondary: #d0d0dc;
+      --color-accent: #534AB7;
+      --color-accent-light: #EEEDFE;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text-primary);
+      background: var(--color-background);
+      line-height: 1.6;
+    }
+
+
+    .stages-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .stages-table th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 2px solid var(--color-border);
+      color: var(--color-text-tertiary);
+      font-weight: 500;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .stages-table td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    .stages-table td:first-child {
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .stages-table td:last-child {
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+
+    /* ─── Scrollytelling layout ─── */
+    .scrolly {
+      display: flex;
+      position: relative;
+    }
+
+    .scrolly-text {
+      flex: 0 0 40%;
+      padding: 0 1rem 0 13rem;
+    }
+
+    .scrolly-visual {
+      flex: 0 0 60%;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 1.5rem 1rem 0;
+      overflow: hidden;
+    }
+
+    .scrolly-visual .visual-panel {
+      width: 100%;
+      max-width: 600px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .scrolly-visual .visual-panel.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .scrolly-visual .visual-panel img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .scrolly-visual .visual-panel svg {
+      width: 100%;
+      height: auto;
+    }
+
+    /* ─── Steps (text blocks that trigger visual changes) ─── */
+    .step {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem 0;
+      opacity: 0.3;
+      transition: opacity 0.4s ease;
+    }
+
+    .step.active {
+      opacity: 1;
+    }
+
+    .step:first-child {
+      padding-top: 20vh;
+    }
+
+    .step:last-child {
+      padding-bottom: 4rem;
+    }
+
+    .step h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      margin-bottom: 0.75rem;
+      color: var(--color-text-secondary);
+    }
+
+    .step strong {
+      color: var(--color-text-primary);
+    }
+
+    .step ul, .step ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    .step li {
+      margin-bottom: 0.4rem;
+      color: var(--color-text-secondary);
+    }
+
+    .cognitive-frame {
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      font-weight: 500;
+      margin-bottom: 1rem;
+      padding-left: 0.75rem;
+      border-left: 3px solid var(--color-accent);
+    }
+
+    .callout {
+      background: var(--color-accent-light);
+      border: 1px solid #AFA9EC;
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      margin: 0.75rem 0;
+      font-size: 0.85rem;
+      color: var(--color-accent);
+    }
+
+    details {
+      margin: 0.75rem 0;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--color-background-secondary);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.82rem;
+      color: var(--color-text-secondary);
+      padding: 0.5rem 0.85rem;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▸ "; color: var(--color-text-tertiary); }
+    details[open] summary::before { content: "▾ "; }
+    summary:hover { color: var(--color-accent); }
+
+    details .details-content {
+      padding: 0 0.85rem 0.6rem;
+      font-size: 0.85rem;
+    }
+
+    details .details-content p { font-size: 0.85rem; }
+
+    /* ─── Footer ─── */
+    .footer {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .footer p {
+      color: var(--color-text-secondary);
+    }
+
+    /* ─── TOC ─── */
+    .toc {
+      position: fixed;
+      top: 1.5rem;
+      left: 1.5rem;
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.78rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      z-index: 100;
+      max-width: 180px;
+    }
+
+    .toc-title {
+      font-weight: 600;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--color-text-tertiary);
+      margin-bottom: 0.4rem;
+    }
+
+    .toc ul { list-style: none; padding: 0; margin: 0; }
+    .toc li { margin-bottom: 0.3rem; }
+    .toc li ul { padding-left: 0.75rem; margin-top: 0.2rem; }
+    .toc li ul li { margin-bottom: 0.15rem; font-size: 0.72rem; }
+    .toc a { color: var(--color-text-secondary); text-decoration: none; transition: color 0.15s; }
+    .toc a:hover { color: var(--color-accent); }
+    .toc a.active { color: var(--color-accent); font-weight: 600; }
+
+    /* ─── Animated illustration ─── */
+    .av { width: 20px; height: 20px; border-radius: 50%; background: #D3D1C7; flex-shrink: 0; }
+    .row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; transition: transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+    .row.right { justify-content: flex-end; }
+    .bar { border-radius: 8px; height: 32px; position: relative; flex-shrink: 0; border: 1.5px solid transparent; transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+    .bar-inner { position: absolute; top: 0; height: 100%; border-radius: 7px; background: #B4B2A9; opacity: 0.5; }
+    .bar.selected { border-color: #7F77DD; box-shadow: 0 0 0 3px rgba(127,119,221,0.12); }
+    .range-band { position: absolute; left: 30px; right: 0; border-radius: 6px; background: rgba(174, 169, 236, 0.18); border: 1.5px dashed #AFA9EC; pointer-events: none; opacity: 0; transition: opacity 0.5s ease, top 0.5s ease, height 0.5s ease; }
+    .range-band.visible { opacity: 1; }
+    .label-pill { position: absolute; font-size: 11px; padding: 2px 8px; border-radius: 5px; white-space: nowrap; opacity: 0; transition: opacity 0.3s ease, top 0.5s ease; pointer-events: none; }
+    .label-pill.visible { opacity: 1; }
+    .gap-spacer { height: 0px; transition: height 0.8s cubic-bezier(0.4,0,0.2,1); position: relative; }
+    .gap-spacer.open { height: 74px; }
+    .insert-row { position: absolute; left: 0; right: 0; top: 0; display: flex; align-items: flex-start; gap: 10px; opacity: 0; transform: translateY(-6px) scale(0.97); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .insert-row.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .av-insert { width: 20px; height: 20px; border-radius: 50%; background: #AFA9EC; border: 1.5px solid #7F77DD; flex-shrink: 0; margin-top: 2px; }
+    .bubble-insert { flex: 1; background: rgba(238, 237, 254, 0.97); border: 1.5px solid #7F77DD; border-radius: 10px; padding: 8px 12px; display: flex; align-items: flex-start; gap: 8px; }
+    .insert-tag { position: absolute; font-size: 10.5px; color: #534AB7; font-weight: 600; white-space: nowrap; opacity: 0; transition: opacity 0.3s ease; display: flex; align-items: center; gap: 4px; background: #EEEDFE; border: 1px solid #AFA9EC; padding: 2px 8px; border-radius: 5px; }
+    .insert-tag.visible { opacity: 1; }
+    .insert-tag .dot { width: 4px; height: 4px; border-radius: 50%; background: #534AB7; flex-shrink: 0; }
+    .caption { font-size: 12px; color: var(--color-text-tertiary); text-align: center; margin-top: 20px; }
+    .replay-btn { font-size: 12px; color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); background: transparent; border-radius: 6px; padding: 4px 12px; cursor: pointer; display: block; margin: 8px auto 0; }
+    .replay-btn:hover { background: var(--color-background-secondary); }
+
+    /* ─── Page number indicator ─── */
+    .page-indicator {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: 20px;
+      padding: 0.4rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+
+    .page-indicator span {
+      color: var(--color-accent);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .toc { display: none; }
+      .scrolly { flex-direction: column; }
+      .scrolly-text {
+        flex: none;
+        padding: 0 1.5rem;
+      }
+      .scrolly-visual {
+        position: relative;
+        flex: none;
+        height: auto;
+        padding: 1.5rem;
+      }
+      .scrolly-visual .visual-panel {
+        position: relative;
+        opacity: 1;
+        transform: none;
+        display: none;
+      }
+      .scrolly-visual .visual-panel.active { display: block; }
+      .step { min-height: auto; opacity: 1; padding: 1.5rem 0; }
+    }
+
+    @media (max-width: 600px) {
+      .header { padding: 2rem 1rem 1.5rem; }
+      .header h1 { font-size: 1.5rem; }
+      .overview { padding: 0 1rem 1.5rem; }
+      .stages-table { font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="toc" id="toc">
+    <div class="toc-title">Contents</div>
+    <ul>
+      <li><a href="#welcome">Welcome</a></li>
+      <li><a href="#overview">Procedure</a></li>
+      <li><a href="#stage-1">1. Conversation</a></li>
+      <li><a href="#stage-2">2. Create Messages</a></li>
+      <li><a href="#stage-3">3. Annotate</a>
+        <ul>
+          <li><a href="#ranking">Ranking</a></li>
+        </ul>
+      </li>
+      <li><a href="#stage-4">4. Review &amp; Revise</a>
+        <ul>
+          <li><a href="#ranking-review">Ranking review</a></li>
+        </ul>
+      </li>
+      <li><a href="#after">What Happens After</a></li>
+    </ul>
+  </nav>
+
+
+  <!-- ═══ Scrollytelling ═══ -->
+  <div class="scrolly">
+    <!-- Left: scrolling text steps -->
+    <div class="scrolly-text">
+
+      <!-- Page 1: Welcome -->
+      <div class="step" id="welcome" data-visual="vis-goal">
+        <h2>Welcome to the Group Chat Study!</h2>
+        <p>You are helping create an open dataset that evaluates where external information could help group conversations.</p>
+        <p>This tutorial walks you through the study step by step.</p>
+      </div>
+
+      <!-- Page 2: Overview -->
+      <div class="step" id="overview" data-visual="vis-flow">
+        <h2>Study Procedure Overview</h2>
+        <p>The study will last <strong>~90 minutes</strong>. There will be four stages as shown on the right.</p>
+        <p>The core question to think about throughout the study is: <strong>"What external information (e.g., a fact, a recommendation) do I wish a knowledgeable participant could have contributed to help our conversation be more productive and smooth? At what point of the conversation?"</strong></p>
+        <p>You don't need to remember these. The annotation system will guide you through the process.</p>
+      </div>
+
+      <!-- Page 3: Stage 1 Conversation -->
+      <div class="step" id="stage-1" data-visual="vis-conversation">
+        <h2>Stage 1: Conversation</h2>
+        <p>The goal for the first stage is to have a real conversation with other participants. You will work with the conversation transcript in later stages of the study.</p>
+        <p>Feel free to push back, share views you feel strongly about, disagree productively. <strong>You are not evaluated on what you say in the conversation.</strong></p>
+        <p>The researcher will end the conversation after ~25 minutes.</p>
+      </div>
+
+      <!-- Page 4: Create Messages concept -->
+      <div class="step" id="stage-2" data-visual="vis-creation">
+        <h2>Stage 2: Create Messages</h2>
+        <p>Think, what external information (e.g., a fact, a recommendation) could have helped the conversation you just had?</p>
+        <p>Review your transcript from Stage 1 and create <strong>inserted messages</strong> that contain those information.</p>
+      </div>
+
+      <!-- Page 10: Annotate -->
+      <div class="step" id="stage-3" data-visual="vis-annotate">
+        <h2>Stage 3: Annotate</h2>
+        <p>In this stage, you will see the messages created by your group mates and determine where they should go.</p>
+        <p>For each message, either:</p>
+        <ul>
+          <li>Select the <strong>placement window</strong> and rate importance</li>
+          <li>Mark <strong>"Should not appear"</strong> if you think it wouldn't be useful at any point</li>
+        </ul>
+        <p>Use <strong>Prev/Next</strong> to navigate. Click <strong>"Save Annotation"</strong> to save each message.</p>
+      </div>
+
+      <!-- Page 11: Ranking -->
+      <div class="step" id="ranking" data-visual="vis-ranking">
+        <h3>Ranking</h3>
+        <p>After annotating all messages, rank them: considering all messages (including your own), which would be most valuable to the group? Drag to reorder.</p>
+        <p>Messages marked "should not appear" are separated at the bottom. You can reorder within each section but not across them.</p>
+        <p>Click <strong>"Submit ranking"</strong> when done. You'll wait for other group members to finish before Stage 4.</p>
+      </div>
+
+      <!-- Page 12: Annotation Review -->
+      <div class="step" id="stage-4" data-visual="vis-overlay">
+        <h2>Stage 4: Review &amp; Revise</h2>
+        <h3>Annotation Review</h3>
+        <p>In this last stage, you will see how others in your group judged the same messages. You'll see <strong>colored overlays</strong> showing where other participants placed each message.</p>
+        <p>For each message, decide whether to revise your placement window, best turn, importance, or switch to "Should not appear."</p>
+        <p>After reviewing all messages, click <strong>"Proceed to Ranking Review."</strong></p>
+      </div>
+
+      <!-- Page 13: Ranking Review -->
+      <div class="step" id="ranking-review" data-visual="vis-deliberation">
+        <h3>Ranking Review</h3>
+        <p>You'll see your ranking alongside your peers' rankings. Each card shows color-coded badges indicating how everyone ranked it (legend at top).</p>
+        <p>Drag to reorder if you find others' rankings compelling. When satisfied, click <strong>"Save ranking and complete review."</strong></p>
+        <p>You'll then see a summary of your decisions while waiting for other group members to finish.</p>
+      </div>
+
+      <!-- Page 14: What happens after -->
+      <div class="step" id="after" data-visual="vis-after">
+        <h2>What Happens After</h2>
+        <p>Once all group members complete Stage 4, your session is done. Your annotations and rankings are saved automatically.</p>
+        <p>Congratulations! Your contributions become part of an open dataset to evaluate AI agents.</p>
+        <p>We need a lot of participants (120)! Please <strong>share the call for participation</strong> with friends and colleagues.</p>
+      </div>
+
+    </div>
+
+    <!-- Right: sticky visual panel -->
+    <div class="scrolly-visual">
+
+      <!-- Page 1: Welcome - animated illustration -->
+      <div class="visual-panel active" id="vis-goal">
+        <div style="padding: 1rem 0; max-width: 560px; margin: 0 auto;">
+          <div id="scene" style="position: relative;">
+            <div class="row"><div class="av"></div><div class="bar" style="width:260px"><div class="bar-inner" style="width:170px"></div></div></div>
+            <div class="row right"><div class="bar" style="width:290px"><div class="bar-inner" style="width:200px; right:0;"></div></div><div class="av"></div></div>
+            <div class="row" id="t3"><div class="av"></div><div class="bar" style="width:210px"><div class="bar-inner" style="width:130px"></div></div></div>
+            <div class="row" id="t4"><div class="av"></div><div class="bar" style="width:240px"><div class="bar-inner" style="width:150px"></div></div></div>
+            <div class="row right" id="t5"><div class="bar" id="bar5" style="width:270px"><div class="bar-inner" style="width:190px; right:0;"></div></div><div class="av"></div></div>
+            <div class="insert-tag" id="insert-tag" style="right: 50px;"><span class="dot"></span>best turn to insert after</div>
+            <div class="gap-spacer" id="gap">
+              <div class="insert-row" id="insert-row">
+                <div class="av-insert"></div>
+                <div class="bubble-insert">
+                  <div>
+                    <p style="font-size:13px; color:#26215C; font-weight:500; margin:0 0 3px;">Here is a useful source.</p>
+                    <p style="font-size:12px; color:#534AB7; text-decoration:underline; font-family:var(--font-mono,monospace); margin:0;">https://example.org/relevant-paper</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="t6"><div class="av"></div><div class="bar" style="width:200px"><div class="bar-inner" style="width:120px"></div></div></div>
+            <div class="row right" id="t7"><div class="bar" style="width:310px"><div class="bar-inner" style="width:220px; right:0;"></div></div><div class="av"></div></div>
+            <div id="range-band" class="range-band"></div>
+            <div id="label-earliest" class="label-pill" style="background:#EEEDFE; color:#534AB7; border: 1px solid #AFA9EC;">earliest</div>
+            <div id="label-latest" class="label-pill" style="background:#EEEDFE; color:#534AB7; border: 1px solid #AFA9EC;">latest</div>
+          </div>
+          <button class="replay-btn" id="replayBtn">replay ↺</button>
+        </div>
+      </div>
+
+      <!-- Page 2: Overview flow -->
+      <div class="visual-panel" id="vis-flow">
+        <svg width="480" height="340" viewBox="0 0 480 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="20" width="400" height="56" rx="12" fill="#fff" stroke="#22c55e" stroke-width="2"/>
+          <circle cx="72" cy="48" r="18" fill="#22c55e"/><text x="72" y="53" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+          <text x="100" y="42" font-size="13" fill="#1a1a2e" font-weight="600">Conversation</text>
+          <text x="100" y="58" font-size="11" fill="#7a7a9a">Discuss a topic with your group</text>
+          <text x="410" y="52" font-size="10" fill="#7a7a9a" text-anchor="end">~25 min</text>
+          <path d="M240 76 L240 96" stroke="#d0d0dc" stroke-width="2" marker-end="url(#flowArrow)"/>
+          <rect x="40" y="100" width="400" height="56" rx="12" fill="#fff" stroke="#f59e0b" stroke-width="2"/>
+          <circle cx="72" cy="128" r="18" fill="#f59e0b"/><text x="72" y="133" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+          <text x="100" y="122" font-size="13" fill="#1a1a2e" font-weight="600">Create Messages</text>
+          <text x="100" y="138" font-size="11" fill="#7a7a9a">Write helpful messages and choose where they go</text>
+          <text x="410" y="132" font-size="10" fill="#7a7a9a" text-anchor="end">~25 min</text>
+          <path d="M240 156 L240 176" stroke="#d0d0dc" stroke-width="2" marker-end="url(#flowArrow)"/>
+          <rect x="40" y="180" width="400" height="56" rx="12" fill="#fff" stroke="#f97316" stroke-width="2"/>
+          <circle cx="72" cy="208" r="18" fill="#f97316"/><text x="72" y="213" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+          <text x="100" y="202" font-size="13" fill="#1a1a2e" font-weight="600">Annotate</text>
+          <text x="100" y="218" font-size="11" fill="#7a7a9a">Place groupmates' messages and rank all messages</text>
+          <text x="410" y="212" font-size="10" fill="#7a7a9a" text-anchor="end">~20 min</text>
+          <path d="M240 236 L240 256" stroke="#d0d0dc" stroke-width="2" marker-end="url(#flowArrow)"/>
+          <rect x="40" y="260" width="400" height="56" rx="12" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
+          <circle cx="72" cy="288" r="18" fill="#06b6d4"/><text x="72" y="293" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+          <text x="100" y="282" font-size="13" fill="#1a1a2e" font-weight="600">Review &amp; Revise</text>
+          <text x="100" y="298" font-size="11" fill="#7a7a9a">Compare with peers, optionally revise your choices</text>
+          <text x="410" y="292" font-size="10" fill="#7a7a9a" text-anchor="end">~20 min</text>
+          <defs><marker id="flowArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#d0d0dc"/></marker></defs>
+        </svg>
+      </div>
+
+      <!-- Page 3: Conversation SVG -->
+      <div class="visual-panel" id="vis-conversation">
+        <svg width="400" height="220" viewBox="0 0 400 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="10" width="360" height="200" rx="12" fill="#fff" stroke="#d0d0dc"/>
+          <circle cx="52" cy="45" r="12" fill="#93c5fd"/><rect x="72" y="32" width="180" height="26" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+          <circle cx="348" cy="85" r="12" fill="#fca5a5"/><rect x="148" y="72" width="190" height="26" rx="8" fill="#fef2f2" stroke="#fecaca"/>
+          <circle cx="52" cy="125" r="12" fill="#86efac"/><rect x="72" y="112" width="220" height="26" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+          <circle cx="348" cy="165" r="12" fill="#c4b5fd"/><rect x="128" y="152" width="210" height="26" rx="8" fill="#f5f3ff" stroke="#ddd6fe"/>
+          <text x="162" y="49" font-size="11" fill="#4a4a6a">That's an interesting point...</text>
+          <text x="243" y="89" font-size="11" fill="#4a4a6a">I disagree because...</text>
+          <text x="182" y="129" font-size="11" fill="#4a4a6a">What about the case where...</text>
+          <text x="233" y="169" font-size="11" fill="#4a4a6a">Actually, I read that...</text>
+        </svg>
+      </div>
+
+      <!-- Page 4: Create message concept -->
+      <div class="visual-panel" id="vis-creation">
+        <img src="/images/stage2-message-creation.png" alt="The message creation interface">
+      </div>
+
+      <!-- Page 5: Annotation screenshot -->
+      <div class="visual-panel" id="vis-annotate">
+        <img src="/images/stage3-annotate.png" alt="The annotation interface">
+      </div>
+
+      <!-- Page 11: Ranking SVG -->
+      <div class="visual-panel" id="vis-ranking">
+        <svg width="320" height="200" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="10" width="280" height="34" rx="7" fill="#fff" stroke="#d0d0dc"/>
+          <circle cx="42" cy="27" r="10" fill="#4f46e5"/><text x="42" y="31" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+          <text x="62" y="31" font-size="12" fill="#4a4a6a">Message A</text>
+          <rect x="20" y="52" width="280" height="34" rx="7" fill="#fff" stroke="#d0d0dc"/>
+          <circle cx="42" cy="69" r="10" fill="#4f46e5"/><text x="42" y="73" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+          <text x="62" y="73" font-size="12" fill="#4a4a6a">Message B</text>
+          <rect x="20" y="94" width="280" height="34" rx="7" fill="#fff" stroke="#d0d0dc"/>
+          <circle cx="42" cy="111" r="10" fill="#4f46e5"/><text x="42" y="115" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+          <text x="62" y="115" font-size="12" fill="#4a4a6a">Message C</text>
+          <line x1="20" y1="140" x2="300" y2="140" stroke="#d0d0dc" stroke-dasharray="5 3"/>
+          <text x="160" y="156" font-size="10" fill="#7a7a9a" text-anchor="middle">Should not appear</text>
+          <rect x="20" y="164" width="280" height="34" rx="7" fill="#f8f8f8" stroke="#d0d0dc" opacity="0.6"/>
+          <circle cx="42" cy="181" r="10" fill="#9ca3af"/><text x="42" y="185" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+          <text x="62" y="185" font-size="12" fill="#9ca3af">Message D</text>
+          <path d="M295 60 C312 60, 312 36, 295 36" stroke="#AFA9EC" stroke-width="1.5" fill="none" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+          <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#AFA9EC"/></marker></defs>
+        </svg>
+      </div>
+
+      <!-- Page 12: Color overlay SVG -->
+      <div class="visual-panel" id="vis-overlay">
+        <svg width="360" height="170" viewBox="0 0 360 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="10" width="210" height="20" rx="5" fill="#f0f0f5" stroke="#d0d0dc"/>
+          <rect x="40" y="36" width="230" height="20" rx="5" fill="#f0f0f5" stroke="#d0d0dc"/>
+          <rect x="40" y="62" width="190" height="20" rx="5" fill="#f0f0f5" stroke="#d0d0dc"/>
+          <rect x="40" y="88" width="250" height="20" rx="5" fill="#f0f0f5" stroke="#d0d0dc"/>
+          <rect x="40" y="114" width="200" height="20" rx="5" fill="#f0f0f5" stroke="#d0d0dc"/>
+          <text x="20" y="24" font-size="10" fill="#7a7a9a" text-anchor="middle">1</text>
+          <text x="20" y="50" font-size="10" fill="#7a7a9a" text-anchor="middle">2</text>
+          <text x="20" y="76" font-size="10" fill="#7a7a9a" text-anchor="middle">3</text>
+          <text x="20" y="102" font-size="10" fill="#7a7a9a" text-anchor="middle">4</text>
+          <text x="20" y="128" font-size="10" fill="#7a7a9a" text-anchor="middle">5</text>
+          <rect x="42" y="34" width="5" height="76" rx="2.5" fill="rgba(251,191,36,0.5)"/>
+          <rect x="50" y="8" width="5" height="102" rx="2.5" fill="rgba(96,165,250,0.5)"/>
+          <rect x="58" y="60" width="5" height="76" rx="2.5" fill="rgba(52,211,153,0.5)"/>
+          <circle cx="44.5" cy="72" r="4" fill="#f59e0b"/>
+          <circle cx="52.5" cy="46" r="4" fill="#60a5fa"/>
+          <circle cx="60.5" cy="98" r="4" fill="#34d399"/>
+          <circle cx="300" cy="24" r="7" fill="rgba(251,191,36,0.6)" stroke="#f59e0b"/>
+          <text x="314" y="28" font-size="11" fill="#4a4a6a">Y = You</text>
+          <circle cx="300" cy="50" r="7" fill="rgba(96,165,250,0.6)" stroke="#60a5fa"/>
+          <text x="314" y="54" font-size="11" fill="#4a4a6a">A = Peer</text>
+          <circle cx="300" cy="76" r="7" fill="rgba(52,211,153,0.6)" stroke="#34d399"/>
+          <text x="314" y="80" font-size="11" fill="#4a4a6a">B = Peer</text>
+          <text x="180" y="155" font-size="10" fill="#7a7a9a" text-anchor="middle">Colored stripes = placement windows. Dots = best turn.</text>
+        </svg>
+      </div>
+
+      <!-- Page 13: Ranking review screenshot -->
+      <div class="visual-panel" id="vis-deliberation">
+        <img src="/images/stage4-ranking.png" alt="The ranking review interface with peer rankings">
+      </div>
+
+      <!-- Page 14: What happens after SVG -->
+      <div class="visual-panel" id="vis-after">
+        <svg width="440" height="300" viewBox="0 0 440 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="220" cy="60" r="32" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+          <path d="M204 60 L215 71 L237 49" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <text x="220" y="110" font-size="14" fill="#1a1a2e" text-anchor="middle" font-weight="600">Congratulations!</text>
+          <path d="M220 120 L220 145" stroke="#d0d0dc" stroke-width="2" marker-end="url(#afterArrow)"/>
+          <rect x="80" y="150" width="280" height="60" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1.5"/>
+          <text x="220" y="174" font-size="12" fill="#534AB7" text-anchor="middle" font-weight="600">Open Dataset</text>
+          <text x="220" y="194" font-size="11" fill="#7a7a9a" text-anchor="middle">Your contributions help evaluate AI agents</text>
+          <path d="M220 210 L220 235" stroke="#d0d0dc" stroke-width="2" marker-end="url(#afterArrow)"/>
+          <rect x="100" y="240" width="240" height="46" rx="10" fill="#fff" stroke="#d0d0dc" stroke-width="1.5"/>
+          <text x="220" y="260" font-size="11" fill="#4a4a6a" text-anchor="middle" font-weight="500">We need 120 participants!</text>
+          <text x="220" y="276" font-size="11" fill="#534AB7" text-anchor="middle" font-weight="600">Share the call for participation!</text>
+          <defs><marker id="afterArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#d0d0dc"/></marker></defs>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="page-indicator" id="page-indicator">
+    <span id="page-current">1</span> / <span id="page-total">9</span>
+  </div>
+
+  <!-- ═══ Scroll logic ═══ -->
+  <script>
+  (function() {
+    const steps = document.querySelectorAll('.step');
+    const panels = document.querySelectorAll('.visual-panel');
+    const tocLinks = document.querySelectorAll('.toc a');
+    const pageCurrent = document.getElementById('page-current');
+    const pageTotal = document.getElementById('page-total');
+
+    pageTotal.textContent = steps.length;
+
+    function update() {
+      const viewportMid = window.innerHeight * 0.45;
+      let activeStep = steps[0];
+      let activeIndex = 0;
+
+      for (let i = 0; i < steps.length; i++) {
+        const rect = steps[i].getBoundingClientRect();
+        if (rect.top <= viewportMid && rect.bottom > viewportMid * 0.5) {
+          activeStep = steps[i];
+          activeIndex = i;
+        }
+      }
+
+      // Update step opacity
+      steps.forEach(s => s.classList.toggle('active', s === activeStep));
+
+      // Update visual panel
+      const targetVisual = activeStep.dataset.visual;
+      if (targetVisual) {
+        panels.forEach(p => p.classList.toggle('active', p.id === targetVisual));
+      }
+
+      // Update TOC
+      const activeId = activeStep.id || activeStep.closest('[id]')?.id;
+      tocLinks.forEach(link => {
+        const href = link.getAttribute('href').slice(1);
+        link.classList.toggle('active', href === activeId);
+      });
+
+      // Update page indicator
+      pageCurrent.textContent = activeIndex + 1;
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  })();
+  </script>
+
+  <!-- Animation for goal illustration -->
+  <script>
+  (function() {
+    function getRowTop(id) {
+      const scene = document.getElementById('scene');
+      const el = document.getElementById(id);
+      return el.getBoundingClientRect().top - scene.getBoundingClientRect().top;
+    }
+    function getRowBottom(id) {
+      const scene = document.getElementById('scene');
+      const el = document.getElementById(id);
+      return el.getBoundingClientRect().top - scene.getBoundingClientRect().top + el.getBoundingClientRect().height;
+    }
+
+    function reset() {
+      document.getElementById('bar5').classList.remove('selected');
+      document.getElementById('insert-tag').classList.remove('visible');
+      document.getElementById('gap').classList.remove('open');
+      document.getElementById('insert-row').classList.remove('visible');
+      document.getElementById('range-band').classList.remove('visible');
+      document.getElementById('label-earliest').classList.remove('visible');
+      document.getElementById('label-latest').classList.remove('visible');
+    }
+
+    function runAnimation() {
+      reset();
+      setTimeout(() => {
+        const topY = getRowTop('t3') - 4;
+        const botY = getRowBottom('t7') + 4;
+        const band = document.getElementById('range-band');
+        band.style.top = topY + 'px';
+        band.style.height = (botY - topY) + 'px';
+        band.classList.add('visible');
+        document.getElementById('label-earliest').style.top = (topY - 18) + 'px';
+        document.getElementById('label-earliest').style.left = '30px';
+        document.getElementById('label-earliest').classList.add('visible');
+        document.getElementById('label-latest').style.top = (botY + 4) + 'px';
+        document.getElementById('label-latest').style.left = '30px';
+        document.getElementById('label-latest').classList.add('visible');
+      }, 800);
+      setTimeout(() => {
+        document.getElementById('bar5').classList.add('selected');
+        document.getElementById('insert-tag').style.top = (getRowTop('t5') - 18) + 'px';
+        document.getElementById('insert-tag').classList.add('visible');
+      }, 2200);
+      setTimeout(() => { document.getElementById('gap').classList.add('open'); }, 3400);
+      setTimeout(() => { document.getElementById('insert-row').classList.add('visible'); }, 3900);
+    }
+
+    let autoReplayTimer;
+    let goalVisible = false;
+
+    function startAutoReplay() {
+      clearTimeout(autoReplayTimer);
+      autoReplayTimer = setTimeout(() => {
+        if (goalVisible) runAnimation();
+        startAutoReplay();
+      }, 9000);
+    }
+
+    const goalPanel = document.getElementById('vis-goal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        goalVisible = entry.isIntersecting;
+        if (entry.isIntersecting) { runAnimation(); startAutoReplay(); }
+      });
+    }, { threshold: 0.3 });
+    observer.observe(goalPanel);
+
+    if (goalPanel.classList.contains('active')) {
+      goalVisible = true; runAnimation(); startAutoReplay();
+    }
+
+    document.getElementById('replayBtn').addEventListener('click', () => { runAnimation(); startAutoReplay(); });
+  })();
+  </script>
+
+  <div class="footer">
+    <div style="text-align: center; margin: 2.5rem 0 1rem;">
+      <a href="/tutorial/interactive" style="display: inline-block; background: var(--color-accent); color: white; padding: 0.85rem 2.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.05rem; transition: opacity 0.15s;">
+        Start Interactive Tutorial
+      </a>
+      <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-text-tertiary);">
+        Practice the full workflow with guided steps (~5 minutes).
+      </p>
+      <a href="/my-groups" style="display: inline-block; margin-top: 1rem; background: transparent; color: var(--color-text-secondary); padding: 0.65rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 0.9rem; border: 1px solid var(--color-border); transition: background 0.15s, color 0.15s;">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>
