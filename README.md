@@ -4,7 +4,7 @@
 
 A benchmark for evaluating AI systems' ability to identify optimal timing for proactive knowledge surfacing in group conversations.
 
-**🌐 [PITCH Project Website](https://ruotongw.github.io/PITCH-website/)**
+**🌐 [PITCH Project Website](https://social.cs.washington.edu/PITCH-website)**
 
 This benchmark was developed to advance research in proactive AI systems and human-AI collaboration. Special thanks to all conversation participants and annotators who contributed to the dataset.
 
@@ -128,7 +128,7 @@ Open [http://localhost:5173](http://localhost:5173)
 
 ### Related Resources
 
-- **[PITCH Human Baseline System](https://github.com/gobrianyu/pitch-human-baseline)** — Tools for evaluating AI predictions against human baseline judgments
+- **[PITCH Human Baseline System](https://github.com/Social-Futures-Lab/pitch-human-baseline)** — Tools for evaluating AI predictions against human baseline judgments
 
 ## Citation
 
